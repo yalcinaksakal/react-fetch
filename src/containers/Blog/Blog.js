@@ -15,6 +15,7 @@ class Blog extends Component {
       const response = await fetch(
         "https://jsonplaceholder.typicode.com/posts"
       );
+      if (!response.ok) throw new Error("Could not get response from server.");
       const data = await response.json();
       const updatedPosts = data.slice(0, 4).map(post => {
         return { ...post, author: "YA" };
