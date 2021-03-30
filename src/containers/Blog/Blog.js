@@ -23,7 +23,7 @@ class Blog extends Component {
       this.setState({ posts: updatedPosts });
     } catch (err) {
       this.setState({
-        posts: [{ title: "❌ " + err.message }],
+        posts: [{ title: "❌ " + err.message,id:"error" }],
       });
     }
   }
