@@ -1,57 +1,42 @@
 import React, { Component } from "react";
+import { Route, Link } from "react-router-dom";
 
-import Post from "../../components/Post/Post";
-import FullPost from "../../components/FullPost/FullPost";
-import NewPost from "../../components/NewPost/NewPost";
+import Posts from "./Posts/Posts";
+import NewPost from "./NewPost/NewPost";
+
 import "./Blog.css";
 
 class Blog extends Component {
-  state = {
-    posts: [],
-    selectedPostId: null,
-  };
-  async componentDidMount() {
-    try {
-      const response = await fetch(
-        "https://jsonplaceholder.typicode.com/posts"
-      );
-      if (!response.ok) throw new Error("Could not get response from server.");
-      const data = await response.json();
-      const updatedPosts = data.slice(0, 4).map(post => {
-        return { ...post, author: "YA" };
-      });
-      this.setState({ posts: updatedPosts });
-    } catch (err) {
-      this.setState({
-        posts: [{ title: "❌ " + err.message,id:"error" }],
-      });
-    }
-  }
-
-  postSelectedHandler(id) {
-    this.setState({ selectedPostId: id });
-  }
-
   render() {
-    const posts = this.state.posts.map(post => {
-      return (
-        <Post
-          key={post.id}
-          title={post.title}
-          author={post.author}
-          clicked={() => this.postSelectedHandler(post.id)}
-        />
-      );
-    });
     return (
-      <div>
-        <section className="Posts">{posts}</section>
-        <section>
-          <FullPost id={this.state.selectedPostId} />
-        </section>
-        <section>
-          <NewPost />
-        </section>
+      <div className="Blog">
+        <header>
+          <nav>
+            <ul>
+              <li>
+                <Link to="/"> Home</Link>
+              </li>
+              <li>
+                <Link
+                  to={{
+                    pathname: "/new-post",
+                    hash: "#submit",
+                    search: "?quick-submit=true",
+                  }}
+                >
+                  New Post
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        </header>
+        {/* if path matches, then Route component replaces itself with its render function. exact is boolena value, means exact match, else all cases starting with path */}
+        {/* <Route path="/" exact render={() => <h1>HOME</h1>} />
+        <Route path="/" render={() => <h1>HOME2</h1>} /> */}
+        <Route path="/" exact component={Posts} />
+
+        {/* All routes starting with /new-post */}
+        <Route path="/new-post" component={NewPost} />
       </div>
     );
   }
