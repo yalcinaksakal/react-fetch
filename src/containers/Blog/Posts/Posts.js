@@ -1,5 +1,7 @@
 import React, { Component } from "react";
+import { Route, Link } from "react-router-dom";
 
+import FullPost from "../FullPost/FullPost";
 import Post from "../../../components/Post/Post";
 
 import "./Posts.css";
@@ -11,6 +13,7 @@ class Posts extends Component {
   };
 
   async componentDidMount() {
+    console.log("posts props: ", this.props);
     try {
       const response = await fetch(
         "https://jsonplaceholder.typicode.com/posts"
@@ -29,31 +32,35 @@ class Posts extends Component {
   }
   postSelectedHandler(id) {
     this.setState({ selectedPostId: id });
+    // you may navigate programaticaly, wwithout using Link, remove Link component, push new pathname. react router will navigate to it
+    // this.props.history.push("/" + id);
+    // //this.props.history.push({pathname:"/" + id});
   }
 
   render() {
+    
     const posts = this.state.posts.map(post => {
       return (
-        <Post
-          key={post.id}
-          title={post.title}
-          author={post.author}
-          clicked={() => this.postSelectedHandler(post.id)}
-        />
+        // <Link to={"/posts/" + post.id} key={post.id}>
+        <Link to={"/posts/" + post.id} key={post.id}>
+          <Post
+            // {...this.props}
+
+            title={post.title}
+            author={post.author}
+            clicked={() => this.postSelectedHandler(post.id)}
+          />
+        </Link>
       );
     });
-    return <section className="Posts">{posts}</section>;
+    return (
+      <div>
+        <section className="Posts">{posts}</section>
+        {/* <Route path="/posts/:postId" exact component={FullPost} /> */}
+        <Route path={this.props.match.url+"/:postId"} exact component={FullPost} />
+      </div>
+    );
   }
 }
 
 export default Posts;
-
-// import FullPost from "../FullPost/FullPost";
-// import NewPost from "../NewPost/NewPost";
-
-// <section>
-// <FullPost id={this.state.selectedPostId} />
-// </section>
-// <section>
-// <NewPost />
-// </section>

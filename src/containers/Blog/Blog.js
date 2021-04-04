@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, Link } from "react-router-dom";
+import { Route, NavLink, Switch, Redirect } from "react-router-dom";
 
 import Posts from "./Posts/Posts";
 import NewPost from "./NewPost/NewPost";
@@ -14,18 +14,30 @@ class Blog extends Component {
           <nav>
             <ul>
               <li>
-                <Link to="/"> Home</Link>
+                <NavLink
+                  to="/posts/"
+                  exact
+                  activeClassName="my-active"
+                  activeStyle={{
+                    color: "dodgerblue",
+                    textDecoration: "underline",
+                  }}
+                >
+                  POSTS
+                </NavLink>
               </li>
               <li>
-                <Link
+                <NavLink
                   to={{
+                    //  absolute or relative path. if u dont mention it is treated as absolute path.
+                    // pathname:this.props.match.url + "/new-post",
                     pathname: "/new-post",
                     hash: "#submit",
                     search: "?quick-submit=true",
                   }}
                 >
                   New Post
-                </Link>
+                </NavLink>
               </li>
             </ul>
           </nav>
@@ -33,10 +45,16 @@ class Blog extends Component {
         {/* if path matches, then Route component replaces itself with its render function. exact is boolena value, means exact match, else all cases starting with path */}
         {/* <Route path="/" exact render={() => <h1>HOME</h1>} />
         <Route path="/" render={() => <h1>HOME2</h1>} /> */}
-        <Route path="/" exact component={Posts} />
 
-        {/* All routes starting with /new-post */}
-        <Route path="/new-post" component={NewPost} />
+        <Switch>
+          {/* only first matched route will be rendered 
+          So the order is important */}
+
+          {/* All routes starting with /new-post */}
+          <Route path="/new-post" component={NewPost} />
+          <Route path="/posts" component={Posts} />
+          <Redirect from="/" to="/posts" />
+        </Switch>
       </div>
     );
   }

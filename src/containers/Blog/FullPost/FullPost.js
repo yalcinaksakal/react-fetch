@@ -6,15 +6,27 @@ class FullPost extends Component {
   state = {
     loadedPost: null,
   };
-  async componentDidUpdate() {
-    if (!this.props.id) return;
+  componentDidMount() {
+    console.log("full:post", this.props);
+    this.loadData();
+  }
+
+  //router wont unount and mount components. So you should use didupdate method, if router is being used
+  componentDidUpdate() {
+    this.loadData();
+  }
+
+  async loadData() {
+    if (!this.props.match.params.postId) return;
     if (
       !this.state.loadedPost ||
-      (this.state.loadedPost && this.state.loadedPost.id !== this.props.id)
+      (this.state.loadedPost &&
+        this.state.loadedPost.id !== +this.props.match.params.postId)
     )
       try {
         const response = await fetch(
-          "https://jsonplaceholder.typicode.com/posts/" + this.props.id
+          "https://jsonplaceholder.typicode.com/posts/" +
+            this.props.match.params.postId
         );
         const data = await response.json();
         this.setState({ loadedPost: data });
@@ -25,9 +37,13 @@ class FullPost extends Component {
       }
   }
   deletePostHandler = () => {
-    fetch("https://jsonplaceholder.typicode.com/posts/" + this.props.id, {
-      method: "DELETE",
-    })
+    fetch(
+      "https://jsonplaceholder.typicode.com/posts/" +
+        this.props.match.params.postId,
+      {
+        method: "DELETE",
+      }
+    )
       .then(response => {
         console.log(response);
         return response.json();
@@ -39,7 +55,7 @@ class FullPost extends Component {
   };
   render() {
     let post = <p style={{ textAlign: "center" }}>Please select a Post!</p>;
-    if (this.props.id)
+    if (this.props.match.params.postId)
       post = <p style={{ textAlign: "center" }}>Loading...!</p>;
     if (this.state.loadedPost)
       post = (
