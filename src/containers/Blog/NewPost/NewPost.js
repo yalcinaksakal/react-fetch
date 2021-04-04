@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
 
 import "./NewPost.css";
 
@@ -7,6 +8,7 @@ class NewPost extends Component {
     title: "",
     content: "",
     author: "YA",
+    submitted: false,
   };
 
   componentDidMount() {
@@ -24,7 +26,10 @@ class NewPost extends Component {
       method: "POST",
       body: JSON.stringify(data),
     })
-      .then(response => response.json())
+      .then(response => {
+        this.setState({ submitted: true });
+        return response.json();
+      })
       .then(data => {
         console.log("Success:", data);
       })
@@ -33,8 +38,10 @@ class NewPost extends Component {
       });
   };
   render() {
+    const redirect = this.state.submitted ? <Redirect to="/posts" /> : null;
     return (
       <div className="NewPost">
+        {redirect}
         <h1>Add a Post</h1>
         <label>Title</label>
         <input
