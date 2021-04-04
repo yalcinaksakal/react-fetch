@@ -28,6 +28,9 @@ class NewPost extends Component {
     })
       .then(response => {
         this.setState({ submitted: true });
+
+        //instead of redirecting u may use history
+        // this.props.history.push('/posts');
         return response.json();
       })
       .then(data => {
