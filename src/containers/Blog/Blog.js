@@ -1,12 +1,22 @@
 import React, { Component } from "react";
 import { Route, NavLink, Switch, Redirect } from "react-router-dom";
 
-import Posts from "./Posts/Posts";
-import NewPost from "./NewPost/NewPost";
-
 import "./Blog.css";
 
+
+import Posts from "./Posts/Posts";
+// import NewPost from "./NewPost/NewPost";
+import asyncComp from "../../hoc/asyncComponent/asyncComp";
+const AsyncNewPost = asyncComp(() => {
+  return import("./NewPost/NewPost");
+});
+
+
+
 class Blog extends Component {
+  state = {
+    auth: true,
+  };
   render() {
     return (
       <div className="Blog">
@@ -51,9 +61,13 @@ class Blog extends Component {
           So the order is important */}
 
           {/* All routes starting with /new-post */}
-          <Route path="/new-post" component={NewPost} />
+          {this.state.auth ? (
+            <Route path="/new-post" component={AsyncNewPost} />
+          ) : null}
           <Route path="/posts" component={Posts} />
-          <Redirect from="/" to="/posts" />
+          {/* 404 unknowm */}
+          <Route render={() => <h1>Not Found</h1>} />
+          {/* <Redirect from="/" to="/posts" /> */}
         </Switch>
       </div>
     );

@@ -13,6 +13,8 @@ class NewPost extends Component {
 
   componentDidMount() {
     console.log("new post props:", this.props);
+
+    //if (unauth) this.props.hitory.replace('/posts);
   }
 
   postDataHandler = () => {
@@ -31,6 +33,8 @@ class NewPost extends Component {
 
         //instead of redirecting u may use history
         // this.props.history.push('/posts');
+        //or replace(removing new post page from nav stack)
+        // this.props.history.replace('/posts');
         return response.json();
       })
       .then(data => {

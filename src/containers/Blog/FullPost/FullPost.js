@@ -28,11 +28,15 @@ class FullPost extends Component {
           "https://jsonplaceholder.typicode.com/posts/" +
             this.props.match.params.postId
         );
+        if (!response.ok) throw new Error("Post not found");
         const data = await response.json();
         this.setState({ loadedPost: data });
       } catch (err) {
         this.setState({
-          loadedPost: { body: "❌ " + err.message },
+          loadedPost: {
+            body: "❌ " + err.message,
+            id: this.props.match.params.postId,
+          },
         });
       }
   }
